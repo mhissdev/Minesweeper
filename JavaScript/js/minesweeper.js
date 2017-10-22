@@ -29,7 +29,7 @@ var minesweeper = (function(){
         // Place mines
         placeMines();
 
-
+        console.log(grid);
         // Return HTML 
         return buildHTML();
     };
@@ -51,17 +51,48 @@ var minesweeper = (function(){
          // Number of mines placed
          var numMinesPlaced = 0;
 
-         while(numMinesPlaced < numMines)
+         while(numMinesPlaced < numMines && numMinesPlaced < grid.length)
          {
             var index = Math.floor(Math.random() * numColumns * numRows);
 
             if(grid[index] != -1)
             {
+                // Place mine
                 grid[index] = -1;
+
+                // Convert index to X, Y coordinates
+                var x1 = index  % numColumns;
+                var y1 = Math.floor(index / numColumns);
+
+                // Update surrounding
+                for(var i = -1; i <= 1; i++)
+                {
+                    for(var j = -1; j <= 1; j++)
+                    {
+                        incrementCellValue(x1 + i, y1 + j);
+                    }
+                }
+
+                // Mine placed OK
                 numMinesPlaced++;
             }
          }
     };
+
+
+    // Increment cell value
+    var incrementCellValue = function(x1, y1){
+
+        if(x1 >= 0 && x1 < numColumns && y1 >= 0 && y1 < numRows)
+        {
+            var index = y1 * numColumns + x1;
+            
+            if(grid[index] != -1)
+            {
+                grid[index]++;
+            }
+        }
+    }
 
 
     // Build HTML
@@ -71,29 +102,30 @@ var minesweeper = (function(){
         var strHTML = '<p>Game, Width: ' + numColumns + ', Height: ' + numRows + ', Mines: ' + numMines + '</p>';
         strHTML += '<table>';
 
-        for(var i = 0; i < numRows; i++)
-        {
-            strHTML += '<tr>';
-
-            for(var j = 0; j < numColumns; j++)
+        for(var i = 0; i < grid.length; i++)
+        {        
+            if(i % numColumns == 0)
             {
-                var cellValue = grid[j * numColumns + i];
-
-                if(cellValue == -1)
-                {
-                    strHTML += '<td><strong>X</strong></td>';
-                }
-                else if(cellValue > 0)
-                {
-                    strHTML += '<td>' + cellValue + '</td>';
-                }
-                else
-                {
-                    strHTML += '<td></td>';
-                }
+                strHTML += '<tr>';
             }
 
-            strHTML += '</tr>';
+            if(grid[i] == -1)
+            {
+                strHTML += '<td><strong>X</strong></td>';
+            }
+            else if(grid[i] > 0)
+            {
+                strHTML += '<td>' + grid[i] + '</td>';
+            }
+            else
+            {
+                strHTML += '<td></td>';
+            }
+            
+            if(i % numColumns == numColumns - 1)
+            {
+                strHTML += '</tr>';
+            }
         }
 
         strHTML += '</table>';
