@@ -27,22 +27,79 @@ var minesweeper = (function(){
         setupGrid();
 
         // Place mines
-        // TODO:
+        placeMines();
 
-        // Build HTML
-        var strHTML = '<p>Game, Width:' + numColumns + ' Height: ' + numRows + ' Mines: ' + numMines + '</p>';
 
         // Return HTML 
-        return strHTML;
+        return buildHTML();
     };
+
 
     // Setup grid
     var setupGrid = function(){
 
-        // Double values for a laugh
-        numColumns *= 2;
-        numRows *= 2;
-        numMines *= 2;
+        // Set default grid values
+        for(var i = 0; i < numColumns * numRows; i++)
+        {
+            grid[i] = 0;
+        }
+    };
+
+    // Place mines
+    var placeMines = function(){
+
+         // Number of mines placed
+         var numMinesPlaced = 0;
+
+         while(numMinesPlaced < numMines)
+         {
+            var index = Math.floor(Math.random() * numColumns * numRows);
+
+            if(grid[index] != -1)
+            {
+                grid[index] = -1;
+                numMinesPlaced++;
+            }
+         }
+    };
+
+
+    // Build HTML
+    var buildHTML = function(){
+
+        // Build HTML
+        var strHTML = '<p>Game, Width: ' + numColumns + ', Height: ' + numRows + ', Mines: ' + numMines + '</p>';
+        strHTML += '<table>';
+
+        for(var i = 0; i < numRows; i++)
+        {
+            strHTML += '<tr>';
+
+            for(var j = 0; j < numColumns; j++)
+            {
+                var cellValue = grid[j * numColumns + i];
+
+                if(cellValue == -1)
+                {
+                    strHTML += '<td><strong>X</strong></td>';
+                }
+                else if(cellValue > 0)
+                {
+                    strHTML += '<td>' + cellValue + '</td>';
+                }
+                else
+                {
+                    strHTML += '<td></td>';
+                }
+            }
+
+            strHTML += '</tr>';
+        }
+
+        strHTML += '</table>';
+
+        // Return HTML 
+        return strHTML;
     };
 
     // Explicitly reveal public pointers to the private functions
@@ -53,4 +110,4 @@ var minesweeper = (function(){
 })();
 
 
-document.getElementById('minesweeper').innerHTML = minesweeper.getHTML(10, 15, 20);
+document.getElementById('minesweeper').innerHTML = minesweeper.getHTML(10, 15, 30);
