@@ -29,7 +29,6 @@ var minesweeper = (function(){
         // Place mines
         placeMines();
 
-        console.log(grid);
         // Return HTML 
         return buildHTML();
     };
