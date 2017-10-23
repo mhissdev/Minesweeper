@@ -91,7 +91,7 @@ var minesweeper = (function(){
                 grid[index]++;
             }
         }
-    }
+    };
 
 
     // Build HTML
@@ -136,7 +136,7 @@ var minesweeper = (function(){
     // Explicitly reveal public pointers to the private functions
     return{
         getHTML: getHTML
-    }
+    };
 
 })();
 
